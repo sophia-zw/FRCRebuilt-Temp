@@ -7,5 +7,6 @@ public interface ShooterIO {
     public static class ShooterIOInputs {
 
     }
-
+    public default void updateInputs(ShooterIOInputs io){}
+    
 }

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.elevator; //N/A
 
 import org.littletonrobotics.junction.AutoLog; //N/A
-
+//THESE ALL NEED TO BE CHANGED***************************************************************************************************888
 public interface ElevatorIO{
     @AutoLog
     public static class ElevatorIOInputs{

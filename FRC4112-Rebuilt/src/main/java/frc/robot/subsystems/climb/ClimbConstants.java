@@ -7,7 +7,7 @@ import com.ctre.phoenix6.configs.Slot0Configs; //https://api.ctr-electronics.com
 import com.ctre.phoenix6.configs.TalonFXConfiguration; //https://api.ctr-electronics.com/phoenix6/latest/java/com/ctre/phoenix6/configs/TalonFXConfiguration.html
 import com.ctre.phoenix6.signals.InvertedValue; //https://api.ctr-electronics.com/phoenix6/latest/java/com/ctre/phoenix6/signals/InvertedValue.html
 import com.ctre.phoenix6.signals.NeutralModeValue; //https://api.ctr-electronics.com/phoenix6/latest/java/com/ctre/phoenix6/signals/NeutralModeValue.html
-
+//THESE ALL NEED TO BE CHANGED***************************************************************************************************888
 public class ClimbConstants {
 	public enum ClimbPosition {
 		//Enums represent constants that are unchangeable(final)

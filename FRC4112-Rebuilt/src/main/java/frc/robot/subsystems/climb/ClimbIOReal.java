@@ -19,7 +19,7 @@ import edu.wpi.first.units.measure.Current; //https://github.wpilib.org/allwpili
 import edu.wpi.first.units.measure.Voltage; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/units/measure/Voltage.html
 import frc.robot.Constants.Ports; //N/A
 import frc.robot.subsystems.climb.ClimbConstants.ClimbPosition; //N/A
-
+//THESE ALL NEED TO BE CHANGED***************************************************************************************************888
 public class ClimbIOReal implements ClimbIO{
     private final TalonFX climbMotor; //Intitalizes the climbMotor to be from TalonFX
 

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.climb; //N/A
 
 import org.littletonrobotics.junction.AutoLog; //N/A
-
+//THESE ALL NEED TO BE CHANGED***************************************************************************************************888
 public interface ClimbIO {
     @AutoLog
     //The class variables will be used in the method update inputs

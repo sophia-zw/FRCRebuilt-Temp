@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Alert; //https://github.wpilib.org/allwpilib/docs/r
 import edu.wpi.first.wpilibj.Alert.AlertType;  //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/Alert.AlertType.html
 import edu.wpi.first.wpilibj2.command.SubsystemBase;  //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/SubsystemBase.html
 import frc.robot.subsystems.climb.ClimbConstants.ClimbPosition; //N/A
-
+//THESE ALL NEED TO BE CHANGED***************************************************************************************************888
 public class Climb extends SubsystemBase {
     private final ClimbIO climbIO;
     private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();

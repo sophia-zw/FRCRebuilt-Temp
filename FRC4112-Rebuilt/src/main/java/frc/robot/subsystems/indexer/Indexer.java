@@ -54,6 +54,7 @@ public class Indexer extends SubsystemBase {
     }
     
     public void runCharacterization(double volts){
+        io.setPivotOpenLoop(volts);
         // what to add here. need to add more methods in io.java
     }
     

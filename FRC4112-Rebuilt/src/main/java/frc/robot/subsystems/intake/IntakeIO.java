@@ -16,11 +16,6 @@ public interface IntakeIO {
         public double wheelsVelocityDegPerSec = 0;
         public double wheelsAppliedVolts = 0;
         public double wheelsCurrent = 0;
-        //INDEXER stuff
-        public boolean indexerConnected = false;
-        public double indexerVelocityDegPerSec = 0;
-        public double indexerAppliedVolts = 0;
-        public double indexerCurrent = 0;
         
         //SENSOR Stuff 
         public double sensorDistanceMillimeters = 0;
@@ -37,8 +32,5 @@ public interface IntakeIO {
     public default void resetState() {}
 
     public default void setWheels(double output) {}
-//INDEXER STUFF
-    public default void setIndexer(double output) {}
-
     
 }

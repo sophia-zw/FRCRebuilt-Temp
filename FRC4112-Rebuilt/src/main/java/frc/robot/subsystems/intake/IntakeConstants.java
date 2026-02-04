@@ -15,7 +15,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 //ROMAN needs to do these constants
 public class IntakeConstants {
-	 public enum IntakePosition {
+	public enum IntakePosition {
         LOWERED(0),
         STRAIGHT(0),
         RETRACTED(0),
@@ -62,16 +62,7 @@ public class IntakeConstants {
     .withCurrentLimits(new CurrentLimitsConfigs()
             .withSupplyCurrentLimitEnable(true)
             .withSupplyCurrentLimit(0))
-            
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Coast));
-//INDEXER, again don't know if you still wanna keep it in Intake
-    public static final TalonFXConfiguration indexerConfig = new TalonFXConfiguration()
-    .withCurrentLimits(new CurrentLimitsConfigs()
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(0))
-            .withMotorOutput(new MotorOutputConfigs()
-                    .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Coast));
 }

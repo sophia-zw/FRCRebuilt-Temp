@@ -46,8 +46,8 @@ public class ShooterIOReal implements ShooterIO {
         angler = new TalonFX(Ports.SHOOTER_ANGLER);
 
         turret.getConfigurator().apply(ShooterConstants.turretConfig);
-        fuel1.getConfigurator().apply(ShooterConstants.fuel1Config);
-        fuel2.getConfigurator().apply(ShooterConstants.fuel2Config);
+        fuel1.getConfigurator().apply(ShooterConstants.fuelConfig);
+        fuel2.getConfigurator().apply(ShooterConstants.fuelConfig);
         angler.getConfigurator().apply(ShooterConstants.anglerConfig);
 
         turretCur = turret.getStatorCurrent();

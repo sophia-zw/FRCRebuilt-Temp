@@ -25,13 +25,19 @@ public class Shooter extends SubsystemBase {
     private final ShooterIO io; 
     private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
     private final Debouncer fuelDebouncer;
+    private TurretPosition targetDir = TurretPosition.START;
+    private AnglerPosition targetPos = AnglerPosition.START;
 
     private boolean hasFuel = false;
     private SysIdRoutine sysId;
     public Shooter(ShooterIO io) {
         this.io = io;
-        //alerts
+        turretDisconnectedAlert = new Alert("Disconnected arm turret motor");
+        fuel1DisconnectedAlert = new Alert("Disconnected arm fuel1 (left) motor alert");
+        fuel2DisconnectedAlert = new Alert("Disconnected arm fuel2 (right) motor alert");
+        anglerDisconnectedAlert = new Alert("Disconnected arm angler motor alert")
 
+        
         fuelDebouncer = new Debouncer(0.1); //constant needs to be tweaked
         sysId = new SysIdRoutine(
             new SysIdRoutine.Config(
@@ -49,19 +55,48 @@ public void periodic(){
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
 
-    //disconnected alerts set
+    turretDisconnectedAlert.set(!inputs.turretConnected);
+    fuel1DisconnectedAlert.set(!inputs.fuelConnected);
+    fuel2DisconnectedAlert.set(!inputs.fuel2Connected);
+    anglerDisconnectedAlert.set(!inputs.anglerConnected);
 }
 
 public boolean isFree(){
     return this.getCurrentCommand() == null;
 }
 
+//I'm just gonna write this if we have to resort to putting a compass rather than calculating
+public void setTurretPosition(TurretPosition dir){
+    io.setTurretClosedLoop(dir.value);
+    targetDir = dir;
+}
+
+public void setAnglerPosition(AnglerPosition anglePos){
+    io.setAnglerClosedLoop(anglePos.value);
+
+    targetPos = anglePos;
+}
+
+public boolean isAtPosition(){
+    return isAtPosition(targetPos);
+}
+
+public boolean isAtPosition(AnglerPosition anglePos){
+    return false; //add code
+}
+
+/*
 public void setShooterPosition(){
 
 }
+*/
 
-public void resetState(){
-    //reset voltages and states
+public AnglerPosition getTargetPos(){
+    return targetPos;
+}
+
+public TurretPosition getTargetDir(){
+    return targetDir;
 }
 
 public String getCurrent(){
@@ -69,23 +104,32 @@ public String getCurrent(){
 }
 
 public void setShooter(){
-    var output = 0; //change
+    io.setFuelVoltage(0); //change to a set constant
     Logger.recordOutput("Shooter Voltage", 0);
 }
 
 public void stopShooter(){
-    //change
+    io.setFuelVoltage(0);
     Logger.recordOutput("Shooter Voltage" , 0);
 }
+
+public void resetState(){
+    io.resetState();
+    setAnglerPosition(AnglerPosition.START);
+    setTurretPosition(TurretPosition.START);
+}
+
 public void hasFuelStatus(boolean has){
     hasFuel = has;
 }
-public boolean hasNote(){
+public boolean hasFuel(){
     return false; //change
 }
 
-public void runCharacterization(double volts){
-    //change
+public void runCharacterization(double voltsT, double voltsA){
+    //VoltsT and VoltsA might be the same
+    io.setTurnOpenLoop(voltsT);
+    io.setAnglerOpenLoop(voltsA);
 }
 
 public Command sysIdQuasistatic(SysIdRoutine.Direction direction){

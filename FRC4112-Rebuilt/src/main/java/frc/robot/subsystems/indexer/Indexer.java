@@ -1,5 +1,7 @@
 package frc.robot.subsystems.indexer;
 
+import edu.wpi.first.math.filter.Debouncer; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/filter/Debouncer.html
+import edu.wpi.first.math.filter.Debouncer.DebounceType; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/filter/Debouncer.DebounceType.html
 import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.wpilibj.Alert; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/Alert.html
 import edu.wpi.first.wpilibj.Timer; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/Timer.html

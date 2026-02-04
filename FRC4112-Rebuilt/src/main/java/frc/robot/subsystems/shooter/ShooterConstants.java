@@ -86,5 +86,15 @@ public class ShooterConstants {
 			.withInverted(InvertedValue.Clockwise_Positive) //IDK if this is cw or ccw. I just put cw for the time being
 			.withNeutralMode(NeutralMode.Brake)
 		);
-	
+		
+	public static final TalonFXConfiguration wheelsConfig = new TalonFXConfiguration(
+		.withCurrentLimit(new CurrentLimitsConfigs()
+			.withSupplyCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(20)
+		)
+		.withMotorOutput(new MotorOutputConfigs()
+			.withInverted(InvertedValue.Clockwise_Positive)
+			.withNeutralMode(NeutralMode.Brake)
+		);
+	)
 }

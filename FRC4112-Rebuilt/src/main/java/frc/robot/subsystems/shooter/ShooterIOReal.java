@@ -21,27 +21,30 @@ import edu.wpi.first.units.measure.AngularVelocity; //https://github.wpilib.org/
 import edu.wpi.first.units.measure.Current; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/units/measure/Current.html
 import edu.wpi.first.units.measure.Voltage; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/units/measure/Voltage.html
 public class ShooterIOReal implements ShooterIO {
-    private final TalonFX turret, fuel1, fuel2, angler; //1 is left, 2 is right
+    private final TalonFX turret, fuel1, fuel2, angler, wheels; //1 is left, 2 is right
     private final Follower fuelFollower;
 
     private StatusSignal<Angle> anglerPos;
-    private StatusSignal<Voltage> fuelVol, anglerCur, turretVol;
-    private StatusSignal<AngularVelocity> fuelVel, anglerVel, turrVel;
-    private StatusSignal<Current> fuelCur, anglerCur, turretCur;
+    private StatusSignal<Voltage> fuelVol, anglerCur, turretVol, wheelsVol;
+    private StatusSignal<AngularVelocity> fuelVel, anglerVel, turrVel, wheelsVel;
+    private StatusSignal<Current> fuelCur, anglerCur, turretCur, wheelsCur;
 
     private final Debouncer turretConnectedDebouncer = new Debouncer(0.5);
     private final Debouncer fuelConnectedDebouncer = new Debouncer(0.5);
-    private final Debouncer anglerConnectedDebouncer = new Debouncer(0.5); 
+    private final Debouncer anglerConnectedDebouncer = new Debouncer(0.5);
+    private final Debouncer wheelsConnectedDebouncer = new Debouncer(0.5); 
 
     //MOTION MAGIC VOLTAGE HASN'T BEEN IMPLEMENTED YET
 
     private final VoltageOut turretOut = new VoltageOut(0);
     private final VoltageOUt fuelOut = new VoltageOut(0);
     private final VoltageOut anglerOut = new VoltageOut(0);
+    private final VoltageOut wheelsOut = new VoltageOut(0);
     public ShooterIOReal() {
         turret = new TalonFX(Ports.SHOOTER_TURRET);
         fuel1 = new TalonFX(Ports.SHOOTER_FUEL1);
         fuel2 = new TalonFX(Ports.SHOOTER_FUEL2);
+        wheels = new TalonFX(Ports.SHOOTER_WHEELS);
         fuelFollower = new Follower(fuel1.getDeviceID(), false);
         angler = new TalonFX(Ports.SHOOTER_ANGLER);
 
@@ -49,6 +52,7 @@ public class ShooterIOReal implements ShooterIO {
         fuel1.getConfigurator().apply(ShooterConstants.fuelConfig);
         fuel2.getConfigurator().apply(ShooterConstants.fuelConfig);
         angler.getConfigurator().apply(ShooterConstants.anglerConfig);
+        wheels.getConfigurator().apply(ShooterConstants.wheelsConfig);
 
         turretCur = turret.getStatorCurrent();
         turretVol = turret.getMotorVoltage();
@@ -63,8 +67,12 @@ public class ShooterIOReal implements ShooterIO {
         anglerVel = angler.getVelocity();
         anglerPos = angler.getPosition(); //questionable
 
-        BaseStatusSignal.setUpdateFrequencyForAll(50, turretCur, anglerCur, fuelCur, turretVol, fuelVol, anglerVol, fuelVel, turretVel, anglerVel, anglerPos);
-        ParentDevice.optimizeBusUtilizationForAll(turret, fuel1, fuel2, angler);
+        wheelsCur = wheels.getStatorCurrent();
+        wheelsVol = wheels.getMotorVoltage();
+        wheelsVel = wheels.getVelocity();
+
+        BaseStatusSignal.setUpdateFrequencyForAll(50, turretCur, anglerCur, fuelCur, turretVol, fuelVol, anglerVol, fuelVel, turretVel, anglerVel, anglerPos, wheelsCur, wheelsVel, wheelsVol);
+        ParentDevice.optimizeBusUtilizationForAll(turret, fuel1, fuel2, angler, wheels);
 
         fuel2.setControl(fuelFollower);
     }
@@ -90,6 +98,10 @@ public class ShooterIOReal implements ShooterIO {
         io.anglerVelocityDegPerSec = anglerVel.getValue().in(DegreesPerSecond);
         io.anglerVoltage = anglerVol.getValue().in(Volts);
         io.anglerCurrent = anglerCur.getValue().in(Amps);
+
+        io.wheelsVelocityDegPerSec = wheelsVel.getValue().in(DegreesPerSecond);
+        io.wheelsVoltage = wheelsVol.getValue().in(Volts);
+        io.wheelsCurrent = wheelsCur.getValue().in(Amps);
     }
     
     @Override   
@@ -122,21 +134,29 @@ public class ShooterIOReal implements ShooterIO {
     }
 
     @Override
+    public void setWheelsVoltage(double value){
+        wheels.setControl(wheelsOut.withOutput(value));
+    }
+
+    /*
+    @Override
     public void resetState(){
         /*turret.setPosition
         angler.setPosition
 
         both of these need a pigeon which i'll deal with later
-        */
+        
     }
-
+    */
+    /*
     @Override
     public void syncPigeon(){
-        /*turret.setPosition
+        turret.setPosition
         angler.setPosition
 
         both of these need a pigeon which i'll deal with later
-        */
+        
     }
+    */
 
 }

@@ -36,6 +36,7 @@ public class Shooter extends SubsystemBase {
         fuel1DisconnectedAlert = new Alert("Disconnected arm fuel1 (left) motor alert");
         fuel2DisconnectedAlert = new Alert("Disconnected arm fuel2 (right) motor alert");
         anglerDisconnectedAlert = new Alert("Disconnected arm angler motor alert")
+        wheelsDisconnectedAlert = new Alert("Disconnected arm wheels motor");
 
         
         fuelDebouncer = new Debouncer(0.1); //constant needs to be tweaked
@@ -59,6 +60,7 @@ public void periodic(){
     fuel1DisconnectedAlert.set(!inputs.fuelConnected);
     fuel2DisconnectedAlert.set(!inputs.fuel2Connected);
     anglerDisconnectedAlert.set(!inputs.anglerConnected);
+    wheelsDisconnectedAlert.set(!inputs.wheelsConnected);
 }
 
 public boolean isFree(){
@@ -124,6 +126,16 @@ public void hasFuelStatus(boolean has){
 }
 public boolean hasFuel(){
     return false; //change
+}
+
+public void setWheels(){
+    io.setWheelsVoltage(0);
+    Logger.recordOutput("Wheels Voltage", 0);
+}
+
+public void stopWheels(){
+    io.setWheelsVoltage(0);
+    Logger.recordOutput("Wheels Voltage",0);
 }
 
 public void runCharacterization(double voltsT, double voltsA){

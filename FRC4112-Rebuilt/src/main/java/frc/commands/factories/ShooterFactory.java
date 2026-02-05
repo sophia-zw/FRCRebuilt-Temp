@@ -20,15 +20,15 @@ public class ShooterFactory {
 
     public Command wheelsSupply(Shooter shooter, Indexer indexer){
         return new WaitUntilCommand(() -> indexer.hasFuel())
-        .andThen(new InstantCommand(() -> shooter.setWheelsVoltage())) //add a voltage here later
+        .andThen(new InstantCommand(() -> shooter.setWheels())) 
         .andThen(new WaitUntilCommand(() -> !indexer.hasFuel()))
         .andThen(new WaitCommand(0.1))
-        .andThen(() -> shooter.setWheelsVoltage(0))
+        .andThen(() -> shooter.stopWheels())
         .withName("Set Wheels Fuel Up");
     }
 
     public Command angle(Shooter shooter, Supplier<AnglerPosition> ang){
-        return new InstantCommand(() -> shooter.setAnglerClosedLoop(ang.get())) //add a angle
+        return new InstantCommand(() -> shooter.setAnglerPosition(ang.get())) 
         .andThen(new WaitUntilCommand(() -> shooter.isAtPosition(ang.get())))
         .andThen(Commands.waitSeconds(0.1))
         .withName("Set Angler Position");
@@ -37,16 +37,16 @@ public class ShooterFactory {
 
     public Command shoot(Shooter shooter, Supplier<AnglerPosition> ang, Supplier<TurretPosition> dir){
         return new WaitUntilCommand(() -> shooter.hasFuel())
-        .andThen(new WaitUntilCommand(() -> angle(shooter, ang.get()))) //add a angler constant here as second parameter
-        .andThen(new WaitUntilCommand(() -> setTurret(shooter, dir.get()))) //add a turret constant here as second parameter
+        .andThen(new WaitUntilCommand(() -> angle(shooter, ang.get()))) 
+        .andThen(new WaitUntilCommand(() -> setTurret(shooter, dir.get()))) 
         .andThen(new WaitCommand(0.1))
-        .andThen(new InstantCommand(() -> shooter.setFuelVoltage())) //add a constant
+        .andThen(new InstantCommand(() -> shooter.setShooter())) 
         .andThen(WaitUntilCommand(() -> !shooter.hasFuel()))
-        .andThen(new InstantCommand(() -> shooter.setFuelVoltage(0)))
+        .andThen(new InstantCommand(() -> shooter.stopShooter()))
         .withName("Shoot");
     }
     public Command setTurret(Shooter shooter, Suppler<TurretPosition> dir){
-        return new InstantCommand(() -> shooter.setTurretClosedLoop(dir.get()))
+        return new InstantCommand(() -> shooter.setTurretPosition(dir.get()))
         .andThen(new WaitUntilCommand(() -> shooter.isAtDirection(dir.get())))
         .andThen(new WaitCommand(0.1))
         .withName("Set Turret Direction");

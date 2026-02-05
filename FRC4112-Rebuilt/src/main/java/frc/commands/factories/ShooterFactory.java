@@ -35,10 +35,10 @@ public class ShooterFactory {
     }
 
 
-    public Command shoot(Shooter shooter){
+    public Command shoot(Shooter shooter, Supplier<AnglerPosition> ang, Supplier<TurretPosition> dir){
         return new WaitUntilCommand(() -> shooter.hasFuel())
-        .andThen(new WaitUntilCommand(() -> angle(shooter, ))) //add a angler constant here as second parameter
-        .andThen(new WaitUntilCommand(() -> setTurret(shooter, ))) //add a turret constant here as second parameter
+        .andThen(new WaitUntilCommand(() -> angle(shooter, ang.get()))) //add a angler constant here as second parameter
+        .andThen(new WaitUntilCommand(() -> setTurret(shooter, dir.get()))) //add a turret constant here as second parameter
         .andThen(new WaitCommand(0.1))
         .andThen(new InstantCommand(() -> shooter.setFuelVoltage())) //add a constant
         .andThen(WaitUntilCommand(() -> !shooter.hasFuel()))
@@ -46,8 +46,8 @@ public class ShooterFactory {
         .withName("Shoot");
     }
     public Command setTurret(Shooter shooter, Suppler<TurretPosition> dir){
-        return new InstantCommand(() -> shooter.setTurretClosedLoop(dir.value))
-        .andThen(new WaitUntilCommand(() -> shooter.isAtDirection(dir.value)))
+        return new InstantCommand(() -> shooter.setTurretClosedLoop(dir.get()))
+        .andThen(new WaitUntilCommand(() -> shooter.isAtDirection(dir.get())))
         .andThen(new WaitCommand(0.1))
         .withName("Set Turret Direction");
     }

@@ -115,8 +115,8 @@ public String getCurrent(){
 }
 
 public void setShooter(){
-    io.setFuelVoltage(0); //change to a set constant
-    Logger.recordOutput("Shooter Voltage", 0);
+    io.setFuelVoltage(ShooterConstants.shootVoltage); 
+    Logger.recordOutput("Shooter Voltage", ShooterConstants.shootVoltage);
 }
 
 public void stopShooter(){
@@ -138,8 +138,13 @@ public boolean hasFuel(){
 }
 
 public void setWheels(){
-    io.setWheelsVoltage(0);
-    Logger.recordOutput("Wheels Voltage", 0);
+    io.setWheelsVoltage(ShooterConstants.wheelsSupplyVoltage);
+    Logger.recordOutput("Wheels Voltage", ShooterConstants.wheelsSupplyVoltage);
+}
+
+public void holdWheels(){
+    io.setWheelsVoltage(ShooterConstants.wheelsHoldVoltage); 
+    Logger.recordOutpu("Wheels Hold" ,ShooterConstants.wheelsHoldVoltage )
 }
 
 public void stopWheels(){
@@ -148,7 +153,6 @@ public void stopWheels(){
 }
 
 public void runCharacterization(double voltsT, double voltsA){
-    //VoltsT and VoltsA might be the same
     io.setTurnOpenLoop(voltsT);
     io.setAnglerOpenLoop(voltsA);
 }

@@ -102,6 +102,14 @@ public TurretPosition getTargetDir(){
     return targetDir;
 }
 
+public boolean isAtDirection(){
+    return isAtPosition(targetDir);
+}
+
+public boolean isAtDirection(TurretPosition turrDir){
+    return false;//add code
+}
+
 public String getCurrent(){
     return this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "NONE";
 }

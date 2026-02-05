@@ -80,11 +80,13 @@ public class ShooterIOReal implements ShooterIO {
         var turretStatus = BaseStatusSignal.refreshAll(turretCur, turretVel, turretVol);
         var fuelStatus = BaseStatusSignal.refreshAll(fuelCur, fuelVel, fuelVol);
         var anglerStatus = BaseStatusSignal.refreshAll(anglerCur, anglerVel, anglerVol, anglerPos);
+        var wheelsStatus = BaseStatusSignal.refreshAll(wheelsCur, wheelsVol, wheelsVel);
         
         io.turretConnected = turretConnectedDebouncer.calculate(turretStatus.isOK());
         io.anglerConnected = anglerConnectedDebouncer.calculate(anglerStatus.isOK());
         io.fuelConnected = fuelConnectedDebouncer.calculate(fuelStatus.isOK());
         io.fuel2Connected = fuel2.isConnected();
+        io.wheelsConnected = wheelsConnectedDebouncer.calculate(wheelsStatus.isOK());
 
         io.turretVelocityDegPerSec = turretVel.getValue().in(DegreesPerSecond);
         io.turretVoltage = turretVol.getValue().in(Volts);

@@ -24,7 +24,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class Shooter extends SubsystemBase {
     private final ShooterIO io; 
     private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
-    private final Debouncer fuelDebouncer;
+    private final Debouncer fuelDebouncer, wheelsDebouncer;
     private TurretPosition targetDir = TurretPosition.START;
     private AnglerPosition targetPos = AnglerPosition.START;
 
@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase {
 
         
         fuelDebouncer = new Debouncer(0.1); //constant needs to be tweaked
+        wheelsDebouncer = new Debouncer(0.1);
         sysId = new SysIdRoutine(
             new SysIdRoutine.Config(
                 Volts.per(Second).of(0.35),

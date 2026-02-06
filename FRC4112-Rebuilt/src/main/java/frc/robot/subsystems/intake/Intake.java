@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
     
     private final IntakeIO io;
     private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    private final Alert pivotDisconnectedAlert, wheelsDisconnectedAlert, indexerDisconnectedAlert; 
+    private final Alert pivotDisconnectedAlert, wheelsDisconnectedAlert; 
     /*Don't know about if there is a laserCAN, but any sensors also need an alert
     We have two motors based on the CAD. The right one (front side view) should be the wheels, the left should be the pivot (up and down)
     */
@@ -34,14 +34,12 @@ public class Intake extends SubsystemBase {
         this.io = io;
         pivotDisconnectedAlert = new Alert("Disconnected intake pivot motor.", AlertType.kError);
         wheelsDisconnectedAlert = new Alert("Disconnected intake wheels motor.", AlertType.kError);
-        indexerDisconnectedAlert = new Alert("Disconnected intake indexer motor.", AlertType.kError);
         //Again laserCAN state is unknown
 
         /*Sensor stuff */
         stuckFuel = new Debouncer(0.5, DebounceType.kRising);
         stuckCooldownTimer = new Timer();
         stuckCooldownTimer.start();
-
 
         targetPosition = IntakePosition.LOWERED;
 
@@ -61,8 +59,6 @@ public class Intake extends SubsystemBase {
 
         pivotDisconnectedAlert.set(!inputs.pivotConnected);
         wheelsDisconnectedAlert.set(!inputs.wheelsConnected);
-        indexerDisconnectedAlert.set(!inputs.indexerConnected);
-        //Again laserCAN state is unknown
     }
 
     public void setIntakePosition(IntakePosition position) {
@@ -85,7 +81,7 @@ public class Intake extends SubsystemBase {
 
     public void lowerIntake() {
         io.setPivotClosedLoop(IntakePosition.LOWERED);
-        io.setWheels(IntakeConstants.wheelVoltage);
+        // io.setWheels(IntakeConstants.wheelVoltage); // keep or remove.. wheels shouldt move while lowering
         targetPosition = IntakePosition.LOWERED;
     }
 
@@ -100,20 +96,15 @@ public class Intake extends SubsystemBase {
         io.setWheels(0.0);
         targetPosition = IntakePosition.RETRACTED;
     }
-    //This is for the indexer but it seems more independent from the intake, so if you want to create a separate organization this is the code
-    /*
-    public void runIndexer() {
-        io.setIndexer(IntakeConstants.indexerVoltage);
+
+    public void setWheels(double output) {
+        io.setWheels(output);
     }
 
-    public void reverseIndexer() {
-        io.setIndexer(-IntakeConstants.indexerVoltage);
+    public void setWheels() {
+        io.setWheels(IntakeConstants.wheelVoltage);
     }
 
-    public void stopIndexer() {
-        io.setIndexer(0.0);
-    }
-    */
 
     public void resetState() {
         io.resetState();
@@ -122,21 +113,6 @@ public class Intake extends SubsystemBase {
         targetPosition = IntakePosition.START;
     }
 
-    private void runCharacterization(double volts) {
-        io.setPivotOpenLoop(volts);
-    }
-
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.quasistatic(direction));
-    }
-
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.dynamic(direction));
-    }
     /*IDK if we'll have a sensor but if we do have a laserCAN, these have been adjusted for fuel */
     @AutoLogOutput
     public boolean fuelIsThere() {
@@ -164,5 +140,21 @@ public class Intake extends SubsystemBase {
     public void resetTimer() {
         stuckCooldownTimer.reset();
         stuckCooldownTimer.start();
+    }
+
+    private void runCharacterization(double volts) {
+        io.setPivotOpenLoop(volts);
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.quasistatic(direction));
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.dynamic(direction));
     }
 }

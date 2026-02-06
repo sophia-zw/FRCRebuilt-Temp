@@ -30,7 +30,6 @@ public class IntakeConstants {
     }
 
     public static final double wheelVoltage = 0;
-    public static final double indexerVoltage = 0;
     public static final double pivotTolerance = 0;
     public static final double minSensorDistance = 0;
     public static final double stuckFuelTimeSeconds = 0;
@@ -65,13 +64,5 @@ public class IntakeConstants {
             
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Coast));
-//INDEXER, again don't know if you still wanna keep it in Intake
-    public static final TalonFXConfiguration indexerConfig = new TalonFXConfiguration()
-    .withCurrentLimits(new CurrentLimitsConfigs()
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(0))
-            .withMotorOutput(new MotorOutputConfigs()
-                    .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Coast));
 }

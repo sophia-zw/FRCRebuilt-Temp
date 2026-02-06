@@ -22,7 +22,7 @@ public interface IntakeIO {
         public double indexerAppliedVolts = 0;
         public double indexerCurrent = 0;
         
-        //SENSOR Stuff 
+        //SENSOR 
         public double sensorDistanceMillimeters = 0;
         public boolean laserCANConnected = false;
         public int laserCANStatus = 0;

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake;
 
-
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -50,7 +49,7 @@ public class IntakeIOReal implements IntakeIO {
         pivot = new TalonFX(Ports.INTAKE_PIVOT);
         wheels = new TalonFX(Ports.INTAKE_WHEEL);
         
-        lasercan = new LaserCan(Ports.INDEXER_SENSOR); //SENSOR STUFF
+        lasercan = new LaserCan(Ports.INDEXER_SENSOR); //keep this here or no. will figure out
 
         pivot.getConfigurator().apply(IntakeConstants.pivotConfig);
         wheels.getConfigurator().apply(IntakeConstants.wheelConfig);
@@ -117,7 +116,8 @@ public class IntakeIOReal implements IntakeIO {
         pivot.setVoltage(volts);
     }
 
-    @Override public void setWheels(double output) {
+    @Override 
+    public void setWheels(double output) {
         wheels.setVoltage(output);
     }
 

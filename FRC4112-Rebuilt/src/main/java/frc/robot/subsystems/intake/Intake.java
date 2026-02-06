@@ -115,6 +115,15 @@ public class Intake extends SubsystemBase {
     }
     */
 
+    public void setWheels(double output) {
+        io.setWheels(output);
+    }
+
+    public void setWheels() {
+        io.setWheels(IntakeConstants.wheelVoltage);
+    }
+
+
     public void resetState() {
         io.resetState();
         io.setPivotClosedLoop(IntakePosition.START);
@@ -122,21 +131,6 @@ public class Intake extends SubsystemBase {
         targetPosition = IntakePosition.START;
     }
 
-    private void runCharacterization(double volts) {
-        io.setPivotOpenLoop(volts);
-    }
-
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.quasistatic(direction));
-    }
-
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.dynamic(direction));
-    }
     /*IDK if we'll have a sensor but if we do have a laserCAN, these have been adjusted for fuel */
     @AutoLogOutput
     public boolean fuelIsThere() {
@@ -164,5 +158,21 @@ public class Intake extends SubsystemBase {
     public void resetTimer() {
         stuckCooldownTimer.reset();
         stuckCooldownTimer.start();
+    }
+
+    private void runCharacterization(double volts) {
+        io.setPivotOpenLoop(volts);
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.quasistatic(direction));
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.dynamic(direction));
     }
 }

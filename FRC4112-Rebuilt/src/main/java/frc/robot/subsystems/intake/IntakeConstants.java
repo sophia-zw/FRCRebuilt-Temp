@@ -65,12 +65,4 @@ public class IntakeConstants {
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Coast));
-//INDEXER, again don't know if you still wanna keep it in Intake
-    public static final TalonFXConfiguration indexerConfig = new TalonFXConfiguration()
-    .withCurrentLimits(new CurrentLimitsConfigs()
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(0))
-            .withMotorOutput(new MotorOutputConfigs()
-                    .withInverted(InvertedValue.Clockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Coast));
 }

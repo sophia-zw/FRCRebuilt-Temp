@@ -71,6 +71,7 @@ public class RobotContainer {
 										new Pose2d(drive.getFieldPose().getTranslation(), new Rotation2d())),
 								drive)
 								.ignoringDisable(true));
+    //back buttons of the controller. Trigger is the furthest back
     controller
 				.leftBumper();
     controller

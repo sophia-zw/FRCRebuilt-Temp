@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 public class RobotContainer {
   private final Drive drive;
-	private final Intake intake;
-	private final Indexer indexer;
-	private final Shooter shooter;
-	private final Vision vision;
+  private final Intake intake;
+  private final Indexer indexer;
+  private final Shooter shooter;
+  private final Vision vision;
 
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -56,9 +56,12 @@ public class RobotContainer {
 						() -> -controller.getLeftX(),
 						() -> -controller.getRightX()));
     controller
-				.b();
+				.b() //Starting button
+				.and(() -> isFree(shooter, indexer, intake, climb))
+				.and(() -> intake.getIntakePosition() == IntakePosition.START);
     controller
-				.y();
+				.y()
+				.and(() -> isFree(intake));
     controller
 				.x();
     controller
@@ -73,13 +76,21 @@ public class RobotContainer {
 								.ignoringDisable(true));
     //back buttons of the controller. Trigger is the furthest back
     controller
-				.leftBumper();
+				.leftBumper()
+				.onTrue(cancel());
     controller
 				.leftTrigger();
     controller
 				.rightBumper();
     controller
-				.rightTrigger();
+				.rightTrigger()
+				.and(() -> isFree(shooter))
+				.onTrue(ShooterFactory.angle(shooter, AnglerPosition.DOWN)); 
+	controller
+				.rightTrigger()
+				.and(() -> isFree(shooter))
+				.multiPress(2, 2) //2 clicks in 2 seconds
+				.onTrue(ShooterFactory.angle(shooter, AnglerPosition.UP));
 
   }
 

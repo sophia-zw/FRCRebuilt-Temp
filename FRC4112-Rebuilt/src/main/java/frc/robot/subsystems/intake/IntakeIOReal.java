@@ -24,7 +24,6 @@ import frc.robot.subsystems.intake.IntakeConstants.IntakePosition;
 public class IntakeIOReal implements IntakeIO {
     private final TalonFX pivot;
     private final TalonFX wheels;
-    private final TalonFX indexer; //INDEXER STUFF
     private final LaserCan lasercan; //SENSOR STUFF
 
     private final MotionMagicVoltage positionVoltageRequest = new MotionMagicVoltage(0.0);
@@ -38,14 +37,9 @@ public class IntakeIOReal implements IntakeIO {
     private final StatusSignal<Voltage> wheelAppliedVolts;
     private final StatusSignal<Current> wheelCurrent;
 
-    //INDEXER STUFF 
-    private final StatusSignal<AngularVelocity> indexerVel;
-    private final StatusSignal<Voltage> indexerAppliedVolts;
-    private final StatusSignal<Current> indexerCurrent;
-
     private final Debouncer pivotConnectedDebounce = new Debouncer(0);
     private final Debouncer wheelConnectedDebounce = new Debouncer(0);
-    private final Debouncer indexerConnectedDebounce = new Debouncer(0.5); //INDEXER STUFF
+    
     public IntakeIOReal() {
         pivot = new TalonFX(Ports.INTAKE_PIVOT);
         wheels = new TalonFX(Ports.INTAKE_WHEEL);
@@ -63,24 +57,14 @@ public class IntakeIOReal implements IntakeIO {
         wheelVel = wheels.getVelocity();
         wheelAppliedVolts = wheels.getMotorVoltage();
         wheelCurrent = wheels.getStatorCurrent();
-       
-       
-       //INDEXER STUFF
-        indexer = new TalonFX(Ports.INDEXER); 
-        indexer.getConfigurator().apply(IntakeConstants.indexerConfig);
-        indexerVel = indexer.getVelocity();
-        indexerAppliedVolts = indexer.getMotorVoltage();
-        indexerCurrent = indexer.getStatorCurrent();
 
-        //THere are indexer status signals in here btw, if u wanna change something
-        BaseStatusSignal.setUpdateFrequencyForAll(50.0, pivotAngle, pivotVel, pivotAppliedVolts, pivotCurrent, wheelVel, wheelAppliedVolts, wheelCurrent, indexerVel, indexerAppliedVolts, indexerCurrent);
-        ParentDevice.optimizeBusUtilizationForAll(pivot, wheels, indexer);
+        BaseStatusSignal.setUpdateFrequencyForAll(50.0, pivotAngle, pivotVel, pivotAppliedVolts, pivotCurrent, wheelVel, wheelAppliedVolts, wheelCurrent);
+        ParentDevice.optimizeBusUtilizationForAll(pivot, wheels);
     }
 
     public void updateInputs(IntakeIOInputs inputs) {
         var pivotStatus = BaseStatusSignal.refreshAll(pivotAngle, pivotVel, pivotAppliedVolts, pivotCurrent);
         var wheelStatus = BaseStatusSignal.refreshAll(wheelVel, wheelAppliedVolts, wheelCurrent);
-        
 
         inputs.pivotConnected = pivotConnectedDebounce.calculate(pivotStatus.isOK());
         inputs.pivotPositionDeg = pivotAngle.getValue().in(Degrees);
@@ -92,13 +76,6 @@ public class IntakeIOReal implements IntakeIO {
         inputs.wheelsVelocityDegPerSec = wheelVel.getValue().in(DegreesPerSecond);
         inputs.wheelsAppliedVolts = wheelAppliedVolts.getValue().in(Volts);
         inputs.wheelsCurrent = wheelCurrent.getValue().in(Amps);
-        
-        //INDEXER STUFF
-        var indexerStatus = BaseStatusSignal.refreshAll(indexerVel, indexerAppliedVolts, indexerCurrent);
-        inputs.indexerConnected = indexerConnectedDebounce.calculate(indexerStatus.isOK());
-        inputs.indexerVelocityDegPerSec = indexerVel.getValue().in(DegreesPerSecond);
-        inputs.indexerAppliedVolts = indexerAppliedVolts.getValue().in(Volts);
-        inputs.indexerCurrent = indexerCurrent.getValue().in(Amps);
 
         //SENSOR STUFF
         var mes = lasercan.getMeasurement();
@@ -119,12 +96,6 @@ public class IntakeIOReal implements IntakeIO {
 
     @Override public void setWheels(double output) {
         wheels.setVoltage(output);
-    }
-
-    //INDEXER
-    @Override 
-    public void setIndexer(double output) {
-        indexer.setVoltage(output);
     }
 
     @Override

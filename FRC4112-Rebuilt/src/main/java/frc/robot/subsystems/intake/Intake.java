@@ -83,12 +83,15 @@ public class Intake extends SubsystemBase {
         io.setPivotClosedLoop(IntakePosition.LOWERED);
         io.setWheels(IntakeConstants.wheelVoltage);
         targetPosition = IntakePosition.LOWERED;
+        Logger.recordOutput("Intake Wheels Voltage", IntakeConstants.wheelVoltage);
     }
 
     public void purgeIntake() {
         io.setPivotClosedLoop(IntakePosition.LOWERED);
         io.setWheels(-IntakeConstants.wheelVoltage);
         targetPosition = IntakePosition.LOWERED;
+        Logger.recordOutput("Intake Wheels Voltage", IntakeConstants.wheelVoltage);
+        
     }
 
     public void retractIntake() {
@@ -147,4 +150,5 @@ public class Intake extends SubsystemBase {
         stuckCooldownTimer.reset();
         stuckCooldownTimer.start();
     }
+
 }

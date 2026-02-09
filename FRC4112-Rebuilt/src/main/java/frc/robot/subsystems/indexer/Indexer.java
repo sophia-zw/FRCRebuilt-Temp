@@ -36,21 +36,24 @@ public class Indexer extends SubsystemBase {
     
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("Indexer", inputs);
+        Logger.processInputs("Indexer Voltage", inputs);
 
         indexerDisconnectedAlert.set(!inputs.indexerConnected);
     }
 
     public void runIndexer() {
         io.setIndexer(IntakeConstants.indexerVoltage);
+        Logger.recordOutput("Indexer Voltage", IntakeConstants.wheelVoltage);
     }
 
     public void reverseIndexer() {
         io.setIndexer(-IntakeConstants.indexerVoltage);
+        Logger.recordOutput("Indexer Voltage", IntakeConstants.wheelVoltage);
     }
 
     public void stopIndexer() {
         io.setIndexer(0.0);
+        Logger.recordOutput("Indexer Voltage", 0.0);
     }
     
     public void runCharacterization(double volts){

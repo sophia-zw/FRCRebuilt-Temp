@@ -29,12 +29,10 @@ public interface ShooterIO {
         public double wheelsVel = 0;
 
         public double anglerPos = 0;
-
-        
-
-        
-
     }
+
+    
+
     public default void updateInputs(ShooterIOInputs io){}
     
     public default void setTurretClosedLoop(double value){}

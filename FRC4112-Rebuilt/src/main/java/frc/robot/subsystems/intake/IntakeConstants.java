@@ -30,7 +30,6 @@ public class IntakeConstants {
     }
 
     public static final double wheelVoltage = 0;
-    public static final double indexerVoltage = 0;
     public static final double pivotTolerance = 0;
     public static final double minSensorDistance = 0;
     public static final double stuckFuelTimeSeconds = 0;

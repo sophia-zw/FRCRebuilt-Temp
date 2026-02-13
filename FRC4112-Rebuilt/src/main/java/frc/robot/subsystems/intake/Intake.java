@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.*;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Alert;
@@ -81,7 +80,7 @@ public class Intake extends SubsystemBase {
 
     public void lowerIntake() {
         io.setPivotClosedLoop(IntakePosition.LOWERED);
-        io.setWheels(IntakeConstants.wheelVoltage);
+        // io.setWheels(IntakeConstants.wheelVoltage); // keep or remove.. wheels shouldt move while lowering
         targetPosition = IntakePosition.LOWERED;
     }
 
@@ -97,6 +96,15 @@ public class Intake extends SubsystemBase {
         targetPosition = IntakePosition.RETRACTED;
     }
 
+    public void setWheels(double output) {
+        io.setWheels(output);
+    }
+
+    public void setWheels() {
+        io.setWheels(IntakeConstants.wheelVoltage);
+    }
+
+
     public void resetState() {
         io.resetState();
         io.setPivotClosedLoop(IntakePosition.START);
@@ -104,21 +112,6 @@ public class Intake extends SubsystemBase {
         targetPosition = IntakePosition.START;
     }
 
-    private void runCharacterization(double volts) {
-        io.setPivotOpenLoop(volts);
-    }
-
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.quasistatic(direction));
-    }
-
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.dynamic(direction));
-    }
     /*IDK if we'll have a sensor but if we do have a laserCAN, these have been adjusted for fuel */
     @AutoLogOutput
     public boolean fuelIsThere() {
@@ -146,5 +139,21 @@ public class Intake extends SubsystemBase {
     public void resetTimer() {
         stuckCooldownTimer.reset();
         stuckCooldownTimer.start();
+    }
+
+    private void runCharacterization(double volts) {
+        io.setPivotOpenLoop(volts);
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.quasistatic(direction));
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.dynamic(direction));
     }
 }

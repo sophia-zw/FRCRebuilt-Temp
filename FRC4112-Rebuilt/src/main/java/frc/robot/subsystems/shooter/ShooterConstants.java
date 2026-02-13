@@ -32,8 +32,12 @@ public class ShooterConstants {
 	}
 	*/
 
+	//change those. Those are supposed to be in degress
 	public enum TurretPosition {
-		START(0);
+		START(0),
+		BACK(180),
+		RIGHT(90),
+		LEFT(270);
 	
 
 	
@@ -45,7 +49,9 @@ public class ShooterConstants {
 	}
 
 	public enum AnglerPosition {
-		START(0);
+		START(80),
+		UP(120),
+		DOWN(40);
 	
 
 	
@@ -56,8 +62,14 @@ public class ShooterConstants {
 		}
 	}
 
-	public static final double fuelVoltage = 0;
-	public static final double fuelHoldVoltage = 0;
+
+	public static final double wheelsHoldVoltage = 0;
+    public static final double wheelsSupplyVoltage = 0;
+
+    public static final double shootVoltage = 0;
+
+    public static final double turretVoltage = 0;
+    public static final double anglerVoltage = 0;
 
 	/*didn't do angler yet, cause that part is not clear
 	may need a pigeon config too

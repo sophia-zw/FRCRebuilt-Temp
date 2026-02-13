@@ -12,17 +12,17 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine; //https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/sysid/SysIdRoutine.html
 
-
 public class Indexer extends SubsystemBase {
-
     private final IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
     private final Alert indexerDisconnectedAlert; 
+    private boolean hasFuel = false;
+    private final SysIdRoutine sysId;
 
     public Indexer(IndexerIO io) {
         this.io = io
 
-        indexerDisconnectedAlert = new Alert("Disconnected intake indexer motor.", AlertType.kError);
+        indexerDisconnectedAlert = new Alert("Disconnected indexer motor.", AlertType.kError);
 
         sysId = new SysIdRoutine(
                 new SysIdRoutine.Config(
@@ -42,20 +42,35 @@ public class Indexer extends SubsystemBase {
     }
 
     public void runIndexer() {
-        io.setIndexer(IntakeConstants.indexerVoltage);
+        io.setIndexer(IndexerConstants.indexerVoltage);
     }
 
     public void reverseIndexer() {
-        io.setIndexer(-IntakeConstants.indexerVoltage);
+        io.setIndexer(-IndexerConstants.indexerVoltage);
     }
 
+    public boolean getIndexerDirection() { // get if motor is spinning in either direction. 
+        return IndexerConstants.indexerVoltage > 0;  // but this wouldnt really get indexer direction or position relative to shooter
+    } // figure this out 
+
+    public boolean hasFuel() {
+        return hasFuel;
+    }
+
+    public void setFuelStatus(boolean has) {
+        hasFuel = has;
+    }
     public void stopIndexer() {
         io.setIndexer(0.0);
     }
+
+    public void resetState() {
+        io.resetState()
+        io.setIndexerClosedLoop(IndexerConstants.START);
+    }
     
     public void runCharacterization(double volts){
-        io.setPivotOpenLoop(volts);
-        // what to add here. need to add more methods in io.java
+        io.setIndexerOpenLoop(volts);
     }
     
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction){

@@ -24,7 +24,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class Shooter extends SubsystemBase {
     private final ShooterIO io; 
     private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
-    private final Debouncer fuelDebouncer;
+    private final Debouncer fuelDebouncer, wheelsDebouncer;
     private TurretPosition targetDir = TurretPosition.START;
     private AnglerPosition targetPos = AnglerPosition.START;
 
@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase {
 
         
         fuelDebouncer = new Debouncer(0.1); //constant needs to be tweaked
+        wheelsDebouncer = new Debouncer(0.1);
         sysId = new SysIdRoutine(
             new SysIdRoutine.Config(
                 Volts.per(Second).of(0.35),
@@ -101,13 +102,21 @@ public TurretPosition getTargetDir(){
     return targetDir;
 }
 
+public boolean isAtDirection(){
+    return isAtPosition(targetDir);
+}
+
+public boolean isAtDirection(TurretPosition turrDir){
+    return false;//add code
+}
+
 public String getCurrent(){
     return this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "NONE";
 }
 
 public void setShooter(){
-    io.setFuelVoltage(0); //change to a set constant
-    Logger.recordOutput("Shooter Voltage", 0);
+    io.setFuelVoltage(ShooterConstants.shootVoltage); 
+    Logger.recordOutput("Shooter Voltage", ShooterConstants.shootVoltage);
 }
 
 public void stopShooter(){
@@ -129,8 +138,13 @@ public boolean hasFuel(){
 }
 
 public void setWheels(){
-    io.setWheelsVoltage(0);
-    Logger.recordOutput("Wheels Voltage", 0);
+    io.setWheelsVoltage(ShooterConstants.wheelsSupplyVoltage);
+    Logger.recordOutput("Wheels Voltage", ShooterConstants.wheelsSupplyVoltage);
+}
+
+public void holdWheels(){
+    io.setWheelsVoltage(ShooterConstants.wheelsHoldVoltage); 
+    Logger.recordOutpu("Wheels Hold" ,ShooterConstants.wheelsHoldVoltage )
 }
 
 public void stopWheels(){
@@ -139,7 +153,6 @@ public void stopWheels(){
 }
 
 public void runCharacterization(double voltsT, double voltsA){
-    //VoltsT and VoltsA might be the same
     io.setTurnOpenLoop(voltsT);
     io.setAnglerOpenLoop(voltsA);
 }

@@ -2,10 +2,15 @@ package frc.robot.subsystems.indexer;
 
 import frc.robot.subsystems.indexer.IndexerConstants.IndexerPosition;
 
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
+
 public class IndexerIOReal implements IndexerIO {
     private final TalonFX indexer; 
 
-    private final MotionMagicVoltage indexVol = new MotionMagicVoltage(0.0);
+    private final VoltageOut indexVol = new VoltageOut(0.0);
 
     private final StatusSignal<AngularVelocity> indexerVel;
     private final StatusSignal<Voltage> indexerAppliedVolts;
@@ -38,13 +43,18 @@ public class IndexerIOReal implements IndexerIO {
     }
 
     @Override
-    public void setPivotClosedLoop(IndexerPosition pos) {
+    public void setIndexerClosedLoop(IndexerPosition pos) {
         indexer.setControl(indexVol.withPosition(Rotations.convertFrom(pos.value, Degrees))); // check this again. could be wrong. 
     }
 
     @Override
-    public void setPivotOpenLoop(double volts) {
+    public void setIndexerOpenLoop(double volts) {
         indexer.setVoltage(volts);
+    }
+
+    @Override
+    public void resetState() {
+        indexer.setPosition(Rotations.convertFrom(IndexerPosition.START.value, Degrees));
     }
 }
 

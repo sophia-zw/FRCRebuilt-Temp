@@ -15,7 +15,7 @@ import static edu.wpi.first.units.Units.*; //https://github.wpilib.org/allwpilib
 public class Elevator extends SubsystemBase {
     private final ElevatorIO elevatorIO;
     private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
-    private final Alert elev1DisconnectedAlert, elev2DisconnectedAlert;
+    private final Alert elevDisconnectedAlert;
     @AutoLogOutput
     private ElevatorPosition targetPosition;
 
@@ -23,8 +23,7 @@ public class Elevator extends SubsystemBase {
 
     public Elevator(ElevatorIO io){
         elevatorIO = io;
-        elev1DisconnectedAlert = new Alert("Disconnected elevator motor 1.", AlertType.kError); 
-        elev2DisconnectedAlert = new Alert("Disconnected elevator motor 2.", AlertType.kError); 
+        elevDisconnectedAlert = new Alert("Disconnected elevator motor.", AlertType.kError);  
         targetPosition = ElevatorPosition.START;
 
         sysId = new SysIdRoutine(
@@ -42,8 +41,7 @@ public class Elevator extends SubsystemBase {
         elevatorIO.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
 
-        elev1DisconnectedAlert.set(!inputs.elev1Connected);
-        elev2DisconnectedAlert.set(!inputs.elev2Connected);
+        elevDisconnectedAlert.set(!inputs.elevConnected);
     }
 
     public void setPosition(ElevatorPosition height){
